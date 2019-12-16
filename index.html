@@ -1,71 +1,216 @@
 <!DOCTYPE html>
-<head>
-  <title>Electron Auto Update Example</title>
-  <style>
-    body {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 20px;
-      font-family: sans-serif;
-      background-color: #eaeaea;
-      text-align: center;
-    }
-    #notification {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      width: 200px;
-      padding: 20px;
-      border-radius: 5px;
-      background-color: white;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <h1>Electron Auto Update Example</h1>
-  <p id="version"></p>
-  <div id="notification" class="hidden">
-    <p id="message"></p>
-    <button id="close-button" onClick="closeNotification()">
-      Close
-    </button>
-    <button id="restart-button" onClick="restartApp()" class="hidden">
-      Restart
-    </button>
-  </div>
-  <script>
-    const { ipcRenderer } = require('electron');
-    const version = document.getElementById('version');
-    const notification = document.getElementById('notification');
-    const message = document.getElementById('message');
-    const restartButton = document.getElementById('restart-button');
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>To-Do</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" /> -->
+    <style>
+        body {
+            background: #04A1BF;
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+          }
+
+        .intro {
+          margin: 30px 0px;
+          font-weight: bold;
+        }
+
+        h1 {
+          color: #dd2020;
+          text-transform: uppercase;
+          font-weight: 800;
+        }
+
+        p {
+          font-weight: 600;
+        }
+
+        #first {
+          margin-top: 10px;
+          color: rgba(255, 204, 93, 0.459);
+        }
+
+        #second {
+          color: rgb(19, 226, 64);
+
+        }
+
+        #third {
+          color: rgba(2, 95, 112, 0.692);
+          margin-bottom: 30px;
+        }
+
+
+        #enter {
+          border: none;
+          padding: 5px 15px;
+          border-radius: 5px;
+          color: #04A1BF;
+          background-color: #025F70;
+          transition: all 0.75s ease;
+          -webkit-transition: all 0.75s ease;
+          -moz-transition: all 0.75s ease;
+          -ms-transition: all 0.75s ease;
+          -o-transition: all 0.75 ease;
+          font-weight: normal;
+        }
+
+        #enter:hover{
+          background-color: #02798F;
+          color: #FFCD5D;
+        }
+
+        ul {
+          text-align: left;
+          margin-top: 20px;
+        }
+
+
+        li {
+          list-style: none;
+          padding: 10px 20px;
+          color: #ffffff;
+          text-transform: capitalize;
+          font-weight: 600;
+          border: 2px solid #025f70;
+          border-radius: 5px;
+          margin-bottom: 10px;
+          background: #4EB9CD;
+          transition: all 0.75s ease;
+          -webkit-transition: all 0.5s ease;
+          -moz-transition: all 0.5s ease;
+          -ms-transition: all 0.5s ease;
+          -o-transition: all 0.5 ease;
+        }
+
+        li:hover {
+          background: #76CFE0;
+        }
+
+        li > button {
+          font-weight: normal;
+          background: none;
+          border: none;
+          float: right;
+          color: #025f70;
+          font-weight: 800;
+        }
+
+        input {
+          border-radius: 5px;
+          min-width: 65%;
+          padding: 5px;
+          border: none;
+        }
+
+
+        .done {
+          background: #51DF70 !important;
+          color: #00891E;
+        }
+
+        .delete {
+          display: none;
+        }
+        #notification {
+              position: fixed;
+              bottom: 20px;
+              left: 20px;
+              width: 200px;
+              padding: 20px;
+              border-radius: 5px;
+              background-color: white;
+              box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            }
+            .hidden {
+              display: none;
+            }
+    </style>
+  </head>
+  <body>
+    <h1>To - Do</h1>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="intro col-12">
+                    <h1>Work To-Dos</h1>
+                    <div>
+                        <div class="border1"></div>
+                        
+                    </div>
+                </div>
+            </div>
     
-    ipcRenderer.send('app_version');
-    ipcRenderer.on('app_version', (event, arg) => {
-      ipcRenderer.removeAllListeners('app_version');
-      version.innerText = 'Version ' + arg.version;
-    });
-    ipcRenderer.on('update_available', () => {
-      ipcRenderer.removeAllListeners('update_available');
-      message.innerText = 'A new update is available. Downloading now...';
-      notification.classList.remove('hidden');
-    });
-    ipcRenderer.on('update_downloaded', () => {
-      ipcRenderer.removeAllListeners('update_downloaded');
-      message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
-      restartButton.classList.remove('hidden');
-      notification.classList.remove('hidden');
-    });
-    function closeNotification() {
-      notification.classList.add('hidden');
-    }
+            <div class="row">
+                <div class="helpText col-12">
+                    <p id="first">Enter text into the input field to add items to your list.</p>
+                    <p id="second">Click the item to mark it as complete.</p>
+                    <p id="third">Click the "X" to remove the item from your list.</p>
+                </div>
+            </div>
     
-    function restartApp() {
-      ipcRenderer.send('restart_app');
-    }
-  </script>
-</body>
+            <div class="row">
+                <div class="col-12">
+                    <input id="userInput" type="text" placeholder="New item..." maxlength="27">
+                    <button id="enter"><i class="fas fa-pencil-alt"></i></button>
+                </div>
+            </div>
+    
+            <!-- Empty List -->
+            <div class="row">
+                <div class="listItems col-12">
+                    <ul id = "message" class="col-12 offset-0 col-sm-8 offset-sm-2">
+                            <button id="restart-button" class="hidden" onclick="restartApp()"><i class="fas fa-pencil-alt"></i></button>
+                    </ul>
+                </div>
+            </div>
+    
+        </div>
+        <p id="version"></p>
+        <div id="notification" class="hidden">
+          <p id="message"></p>
+          <button id="close-button" onClick="closeNotification()">
+            Close
+          </button>
+          <button id="restart-button" onClick="restartApp()" class="hidden">
+            Restart
+          </button>
+        </div>
+        <script type="text/javascript" src="script_method3.js"></script>
+        <script>
+                const { ipcRenderer } = require('electron');
+                const version = document.getElementById('version');
+                const notification = document.getElementById('notification');
+                const message = document.getElementById('message');
+                const restartButton = document.getElementById('restart-button');
+                
+                ipcRenderer.send('app_version');
+                ipcRenderer.on('app_version', (event, arg) => {
+                  ipcRenderer.removeAllListeners('app_version');
+                  version.innerText = 'Version ' + arg.version;
+                });
+                ipcRenderer.on('update_available', () => {
+                  ipcRenderer.removeAllListeners('update_available');
+                  message.innerText = 'A new update is available. Downloading now...';
+                  notification.classList.remove('hidden');
+                });
+                ipcRenderer.on('update_downloaded', () => {
+                  ipcRenderer.removeAllListeners('update_downloaded');
+                  message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
+                  restartButton.classList.remove('hidden');
+                  notification.classList.remove('hidden');
+                });
+                function closeNotification() {
+                  notification.classList.add('hidden');
+                }
+                
+                function restartApp() {
+                  ipcRenderer.send('restart_app');
+                }
+              </script>
+    </body>
+    </html>
+  </body>
+</html>
